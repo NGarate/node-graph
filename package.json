@@ -1,0 +1,31 @@
+{
+  "name": "node-graph",
+  "version": "0.1.0",
+  "description": "A GraphQL, NodeJS, MongoDB server",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "debug": "nodemon --inspect index.js",
+    "start": "nodemon index.js"
+  },
+  "keywords": [
+    "GraphQL",
+    "NodeJS",
+    "Server",
+    "MongoDB"
+  ],
+  "author": "ngarate",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-graphql": "^0.8.0",
+    "graphql": "^14.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.0.1",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "nodemon": "^1.19.1",
+    "prettier": "^1.18.2"
+  }
+}
