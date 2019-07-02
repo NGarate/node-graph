@@ -2,3 +2,4 @@ node_modules
 uploads
 tsvFiles
 .vscode
+datafiles/*
