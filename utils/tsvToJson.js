@@ -16,8 +16,14 @@ exports.save = async inputPath => {
                     geonameid: json.geonameid,
                     name: json.name,
                     asciiname: json.asciiname,
-                    latitude: json.latitude,
-                    longitude: json.longitude,
+                    location: {
+                        type: "Point",
+                        coordinates: [
+                            json.longitude,
+                            json.latitude,
+                            ...(json.elevation ? [json.elevation] : [])
+                        ]
+                    },
                     featureClass: json["feature class"],
                     featureCode: json["feature code"],
                     countryCode: json["country code"],

@@ -3,8 +3,17 @@ const cityArraySchema = [
         geonameid: { type: Number, index: { unique: true } },
         name: String,
         asciiname: String,
-        latitude: String,
-        longitude: String,
+        location: {
+            type: {
+                type: String,
+                enum: ["Point"],
+                required: true
+            },
+            coordinates: {
+                type: [Number],
+                required: true
+            }
+        },
         featureClass: String,
         featureCode: String,
         countryCode: String,
@@ -14,27 +23,26 @@ const cityArraySchema = [
         admin3Code: String,
         admin4Code: String,
         population: Number,
-        elevation: Number,
         timezone: String,
         modification: Date
     },
     { collection: "Cities" }
 ];
 
-function getCity({ Schema, model }) {
-    const citySchema = getCitySchema(Schema);
-    setUniqueIndex();
-    return model("City", citySchema);
-}
-
-exports.getCityModel = mongoose => {
-    return getCity(mongoose);
+exports.buildCityModel = mongoose => {
+    return getCityModel(mongoose);
 };
+
+function getCityModel({ Schema, model }) {
+    const citySchema = getCitySchema(Schema);
+    setUniqueIndexes(citySchema);
+    return model("Cities", citySchema);
+}
 
 function getCitySchema(Schema) {
     return new Schema(...cityArraySchema);
 }
 
-function setUniqueIndex(schema) {
-    schema.index({ geonameid: 1 }, { unique: true });
+function setUniqueIndexes(schema) {
+    schema.index({ geonameid: 1, countryCode: 1 }, { unique: true });
 }
