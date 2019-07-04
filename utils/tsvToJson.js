@@ -12,6 +12,7 @@ exports.save = async inputPath => {
         .fromStream(readStream)
         .subscribe(
             json => {
+                if (isNotCity(json)) return;
                 const city = new City({
                     geonameid: json.geonameid,
                     name: json.name,
@@ -24,7 +25,6 @@ exports.save = async inputPath => {
                             ...(json.elevation ? [json.elevation] : [])
                         ]
                     },
-                    featureClass: json["feature class"],
                     featureCode: json["feature code"],
                     countryCode: json["country code"],
                     altCountryCodes: Array.from(json.cc2),
@@ -37,12 +37,20 @@ exports.save = async inputPath => {
                     timezone: json.timezone,
                     modification: json["modification date"]
                 });
-                city.save();
+                try {
+                    city.save();
+                } catch (error) {
+                    console.log(error);
+                }
             },
             onError,
             onComplete
         );
 };
+
+function isNotCity(json) {
+    return json["feature class"] !== "P";
+}
 
 function onError(error) {
     console.log(error);
