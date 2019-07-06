@@ -14,10 +14,8 @@ const cityArraySchema = [
                 required: true
             }
         },
-        featureClass: String,
         featureCode: String,
         countryCode: String,
-        altCountryCodes: [String],
         admin1Code: String,
         admin2Code: String,
         admin3Code: String,
@@ -44,5 +42,7 @@ function getCitySchema(Schema) {
 }
 
 function setUniqueIndexes(schema) {
-    schema.index({ geonameid: 1, countryCode: 1 }, { unique: true });
+    schema.index({ countryCode: 1 });
+    schema.index({ geonameid: 1 }, { unique: true });
+    schema.index({ name: 1 });
 }
