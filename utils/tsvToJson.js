@@ -8,18 +8,14 @@ exports.save = async inputUrl => {
 
     csv({
         delimiter: "\t",
-        quote: "off"
+        quote: "off",
+        noheader: true
     })
         .fromStream(responseStream)
         .subscribe(
             json => {
                 if (isNotCity(json)) return;
-
-                try {
-                    getCity(json).save();
-                } catch (error) {
-                    console.log(error);
-                }
+                saveCity(json);
             },
             onError,
             onComplete
@@ -32,33 +28,47 @@ async function getFileStreamPromise(url) {
 }
 
 function isNotCity(json) {
-    return json["feature class"] !== "P";
+    return json.field7 !== "P";
+}
+
+function saveCity(json) {
+    try {
+        return saveOrUpdatePromise(json);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function saveOrUpdatePromise(json) {
+    return City.findOneAndUpdate({ geonameid: json.geonameid }, getCity(json), {
+        upsert: true
+    });
 }
 
 function getCity(json) {
-    return new City({
-        geonameid: json.geonameid,
-        name: json.name,
-        asciiname: json.asciiname,
+    // JSON files meaning https://download.geonames.org/export/dump/readme.txt
+    return {
+        geonameid: json.field1,
+        name: json.field2,
+        asciiname: json.field3,
         location: {
             type: "Point",
             coordinates: [
-                json.longitude,
-                json.latitude,
-                ...(json.elevation ? [json.elevation] : [])
+                json.field6,
+                json.field5,
+                ...(json.field16 ? [json.field16] : [])
             ]
         },
-        featureCode: json["feature code"],
-        countryCode: json["country code"],
-        admin1Code: json["admin1 code"],
-        admin2Code: json["admin2 code"],
-        admin3Code: json["admin3 code"],
-        admin4Code: json["admin4 code"],
-        population: json.population,
-        elevation: json.elevation,
-        timezone: json.timezone,
-        modification: json["modification date"]
-    });
+        featureCode: json.field9,
+        countryCode: json.field10,
+        admin1Code: json.field11,
+        admin2Code: json.field12,
+        admin3Code: json.field13,
+        admin4Code: json.field14,
+        population: json.field15,
+        timezone: json.field18,
+        modification: json.field19
+    };
 }
 
 function onError(error) {
