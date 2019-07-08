@@ -1,9 +1,21 @@
 const csv = require("csvtojson");
 const unzipper = require("unzipper");
 const request = require("request");
-const { City } = require("../utils/mongooose");
+const { City } = require("./utils").mongoose;
 
-exports.save = async inputUrl => {
+const inputUrl = "https://download.geonames.org/export/dump/allCountries.zip";
+
+const saveFile = async () => {
+    try {
+        await save(inputUrl);
+    } catch (e) {
+        console.error(e);
+        process.exit();
+    }
+};
+
+saveFile(inputUrl);
+async function save(inputUrl) {
     const responseStream = await getFileStreamPromise(inputUrl);
 
     csv({
@@ -20,7 +32,7 @@ exports.save = async inputUrl => {
             onError,
             onComplete
         );
-};
+}
 
 async function getFileStreamPromise(url) {
     const { files } = await unzipper.Open.url(request, url);
@@ -73,8 +85,10 @@ function getCity(json) {
 
 function onError(error) {
     console.log(error);
+    process.exit(1);
 }
 
 function onComplete() {
     console.log("All cities added correctly");
+    process.exit();
 }
