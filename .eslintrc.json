@@ -2,21 +2,24 @@
     "env": {
         "commonjs": true,
         "es6": true,
-        "node": true
+        "node": true,
+        "jest/globals": true
     },
     "extends": [
         "eslint:recommended",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "plugin:jest/recommended"
     ],
     "plugins": [
-        "prettier"
+        "prettier",
+        "jest"
     ],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
     },
     "parserOptions": {
-        "ecmaVersion": 2018
+        "ecmaVersion": 2019
     },
     "rules": {
         "prettier/prettier": "error",

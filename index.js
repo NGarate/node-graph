@@ -1,8 +1,6 @@
 const express = require("express");
 const graphqlHTTP = require("express-graphql");
 const mongoose = require("mongoose");
-const multer = require("multer");
-const csv = require("csvtojson");
 
 const app = express();
 const port = 4000;
@@ -25,16 +23,6 @@ app.get("/", async (req, res) => {
 
     const result = await graphql(citySchema, query);
     res.json(result);
-});
-
-const upload = multer({ dest: "uploads/" });
-
-app.post("/upload/csv", upload.array("csv", 10), async (req, res) => {
-    for (const { path: csvFile, originalname: filename } of req.files) {
-        const jsonArray = await csv().fromFile(csvFile);
-        console.log(jsonArray);
-    }
-    res.json({ response: "ok" });
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
