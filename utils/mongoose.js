@@ -3,7 +3,12 @@ const { buildCityModel } = require("../models/cities");
 
 mongoose.connect(
     "mongodb://graphqlUser:jt12,2qG9FU8_vDSCA$-UszdxQRCvw6'vAfIpkNl#cQAA@localhost:27017/graphql",
-    { useCreateIndex: true, useNewUrlParser: true }
+    {
+        useCreateIndex: true,
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        poolSize: 10
+    }
 );
 const db = mongoose.connection;
 
