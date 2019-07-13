@@ -1,7 +1,7 @@
 const csv = require("csvtojson");
 const unzipper = require("unzipper");
 const request = require("request");
-const { City } = require("./utils").mongoose;
+const { City } = require("../utils/mongoose");
 
 const inputUrl = "https://download.geonames.org/export/dump/allCountries.zip";
 
