@@ -2,10 +2,10 @@ const csv = require("csvtojson");
 const unzipper = require("unzipper");
 const request = require("request");
 const { City } = require("../utils/mongoose");
-const { setDeleteFalse } = require("./setDeleteFalse");
+const { setDeletedFalse } = require("./setDeletedFalse");
 
 exports.save = async function save(options, log) {
-    if (options.markDeleted) markAllDeleted(log);
+    if (options.markDeleted) await markAllDeleted(log);
     const stream = await getFileStreamPromise(options.url);
     await processStreamPromise({ stream, options, log });
 };
@@ -35,7 +35,7 @@ function processCSV(saved, { markDeleted, daysAgo }, log) {
         if (isNotCity(json)) return;
 
         if (markDeleted && modifiedMoreThan(daysAgo, json)) {
-            setDeleteFalse(json, log);
+            setDeletedFalse(json, log);
         }
 
         return saveCity({ saved, json, log });

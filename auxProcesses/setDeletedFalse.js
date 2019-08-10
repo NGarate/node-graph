@@ -1,6 +1,6 @@
 const { City } = require("../utils/mongoose");
 
-exports.setDeletedFalse = function setDeletedFalse(json, log) {
+exports.setDeletedFalse = function(json, log) {
     try {
         return City.findOneAndUpdate(
             { geonameid: json.field1 },

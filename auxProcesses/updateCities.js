@@ -4,7 +4,7 @@ const { save } = require("./saveCity");
 saveFile();
 
 async function saveFile() {
-    const saveOptions = getTaskOptionsFromArgs;
+    const saveOptions = getTaskOptionsFromArgs();
     try {
         log("Start updating");
         await save(saveOptions, log);
