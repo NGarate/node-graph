@@ -7,7 +7,8 @@
     "test": "jest",
     "debug": "nodemon --inspect index.js",
     "start": "nodemon index.js",
-    "updateCities": "node ./auxProcesses/updateCities --inspect"
+    "updateCities:15Days": "node ./auxProcesses/updateCities 15",
+    "updateCities:allDelete": "node ./auxProcesses/updateCities delete"
   },
   "keywords": [
     "GraphQL",

@@ -22,7 +22,8 @@ const cityArraySchema = [
         admin4Code: String,
         population: Number,
         timezone: String,
-        modification: Date
+        modification: Date,
+        deleted: Boolean
     },
     { collection: "Cities" }
 ];
