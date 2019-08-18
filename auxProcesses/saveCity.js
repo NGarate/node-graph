@@ -2,12 +2,15 @@ const csv = require("csvtojson");
 const unzipper = require("unzipper");
 const request = require("request");
 const { City } = require("../utils/mongoose");
-const { setDeletedFalse } = require("./setDeletedFalse");
 
 exports.save = async function save(options, log) {
-    if (options.markDeleted) await markAllDeleted(log);
-    const stream = await getFileStreamPromise(options.url);
-    await processStreamPromise({ stream, options, log });
+    try {
+        if (options.markDeleted) await markAllDeleted(log);
+        const stream = await getFileStreamPromise(options.url);
+        await processStreamPromise({ stream, options, log });
+    } catch (error) {
+        log("Save error: ", error);
+    }
 };
 
 async function getFileStreamPromise(url) {
@@ -24,29 +27,23 @@ function processStreamPromise({ stream, options, log }) {
             noheader: true
         })
             .fromStream(stream)
-            .subscribe(processCSV(saved, options, log), reject, resolve);
+            .subscribe(
+                processCSV(saved, options.markDeleted, log),
+                reject,
+                resolve
+            );
     });
 }
 
-function processCSV(saved, { markDeleted, daysAgo }, log) {
+function processCSV(saved, markDeleted, log) {
     return (json, index) => {
         logEveryOneHundredThousand({ saved, index, log });
 
         if (isNotCity(json)) return;
 
-        if (markDeleted && modifiedMoreThan(daysAgo, json)) {
-            setDeletedFalse(json, log);
-        }
-
-        return saveCity({ saved, json, log });
+        saved++;
+        return saveCity({ saved, markDeleted, json, log });
     };
-}
-
-function modifiedMoreThan(days, json) {
-    const timeLapse = 1000 * 60 * 24 * days;
-    const oneWeekAgo = Date.now() - timeLapse;
-    const modificationDate = new Date(json.field19).getTime();
-    return modificationDate < oneWeekAgo;
 }
 
 function logEveryOneHundredThousand({ saved, index, log }) {
@@ -61,13 +58,11 @@ function isNotCity(json) {
 }
 
 // eslint-disable-next-line no-unused-vars
-function saveCity({ saved, json, log }) {
-    saved++;
-
+function saveCity({ json, markDeleted, log }) {
     try {
         return City.findOneAndUpdate(
             { geonameid: json.field1 },
-            getCity(json),
+            getCity(json, markDeleted),
             {
                 upsert: true,
                 new: true,
@@ -79,7 +74,7 @@ function saveCity({ saved, json, log }) {
     }
 }
 
-function getCity(json) {
+function getCity(json, markDeleted) {
     // JSON files dictionary https://download.geonames.org/export/dump/readme.txt
     return {
         geonameid: json.field1,
@@ -102,7 +97,7 @@ function getCity(json) {
         population: json.field15,
         timezone: json.field18,
         modification: json.field19,
-        deleted: false
+        ...(markDeleted && { deleted: false })
     };
 }
 
