@@ -28,5 +28,6 @@ app.get("/", async (req, res) => {
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
 mongoose.connect("mongodb://localhost:27017/graphql", {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useUnifiedTopology: true
 });
