@@ -1,24 +1,24 @@
 const csv = require("csvtojson");
 const unzipper = require("unzipper");
-const request = require("request");
 const { City } = require("../utils/mongoose");
 
-exports.save = async function save(options, log) {
+exports.save = async function save(config, log) {
     try {
-        if (options.markDeleted) await markAllDeleted(log);
-        const stream = await getFileStreamPromise(options.url);
-        await processStreamPromise({ stream, options, log });
+        if (config.markDeleted) await markAllDeleted(log);
+        const stream = await getFileStreamPromise(config.filePath);
+        await processStreamPromise({ stream, config, log });
     } catch (error) {
         log("Save error: ", error);
     }
 };
 
-async function getFileStreamPromise(url) {
-    const { files } = await unzipper.Open.url(request, url);
+async function getFileStreamPromise(filePath) {
+    const { files } = await unzipper.Open.file(filePath);
+
     return files[0].stream();
 }
 
-function processStreamPromise({ stream, options, log }) {
+function processStreamPromise({ stream, config, log }) {
     let saved = 0;
     return new Promise((resolve, reject) => {
         csv({
@@ -28,7 +28,7 @@ function processStreamPromise({ stream, options, log }) {
         })
             .fromStream(stream)
             .subscribe(
-                processCSV(saved, options.markDeleted, log),
+                processCSV(saved, config.markDeleted, log),
                 reject,
                 resolve
             );
@@ -57,7 +57,6 @@ function isNotCity(json) {
     return json.field7 !== "P";
 }
 
-// eslint-disable-next-line no-unused-vars
 function saveCity({ json, markDeleted, log }) {
     try {
         return City.findOneAndUpdate(
