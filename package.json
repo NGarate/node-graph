@@ -1,43 +1,43 @@
 {
-  "name": "node-graph",
-  "version": "0.2.0",
-  "description": "A GraphQL, NodeJS, MongoDB server",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest",
-    "debug": "nodemon --inspect index.js",
-    "start": "nodemon index.js",
-    "updateCities:15Days": "DEBUG=* node ./auxProcesses/updateCities 15",
-    "updateCities:all": "DEBUG=* node ./auxProcesses/updateCities delete"
-  },
-  "keywords": [
-    "GraphQL",
-    "NodeJS",
-    "Server",
-    "MongoDB"
-  ],
-  "author": "ngarate",
-  "license": "ISC",
-  "dependencies": {
-    "axios": "^0.19.0",
-    "csvtojson": "^2.0.10",
-    "debug": "^4.1.1",
-    "express": "^4.17.1",
-    "express-graphql": "^0.8.0",
-    "graphql": "^14.5.8",
-    "graphql-compose": "^7.6.1",
-    "graphql-compose-mongoose": "^7.3.0",
-    "mongoose": "^5.7.13",
-    "request": "^2.88.0",
-    "unzipper": "^0.10.5"
-  },
-  "devDependencies": {
-    "eslint": "^6.7.2",
-    "eslint-config-prettier": "^6.7.0",
-    "eslint-plugin-jest": "^22.21.0",
-    "eslint-plugin-prettier": "^3.1.1",
-    "jest": "^24.9.0",
-    "nodemon": "^1.19.4",
-    "prettier": "^1.19.1"
-  }
+    "name": "node-graph",
+    "version": "0.2.0",
+    "description": "A GraphQL, NodeJS, MongoDB server",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest",
+        "debug": "nodemon --inspect index.js",
+        "start": "nodemon index.js",
+        "updateCities:15Days": "DEBUG=* node ./auxProcesses/updateCities 15",
+        "updateCities:all": "DEBUG=* node ./auxProcesses/updateCities delete"
+    },
+    "keywords": [
+        "GraphQL",
+        "NodeJS",
+        "Server",
+        "MongoDB"
+    ],
+    "author": "ngarate",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "^0.19.0",
+        "csvtojson": "^2.0.10",
+        "debug": "^4.1.1",
+        "express": "^4.17.1",
+        "express-graphql": "^0.8.0",
+        "graphql": "^14.5.8",
+        "graphql-compose": "^7.6.1",
+        "graphql-compose-mongoose": "^7.3.0",
+        "mongoose": "^5.7.13",
+        "request": "^2.88.0",
+        "unzipper": "^0.10.5"
+    },
+    "devDependencies": {
+        "eslint": "^6.7.2",
+        "eslint-config-prettier": "^6.7.0",
+        "eslint-plugin-jest": "^22.21.0",
+        "eslint-plugin-prettier": "^3.1.1",
+        "jest": "^24.9.0",
+        "nodemon": "^1.19.4",
+        "prettier": "^1.19.1"
+    }
 }
