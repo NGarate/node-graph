@@ -1,8 +1,8 @@
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
-const log = require("debug")("progress");
-const logTotal = require("debug")("TotalUpdateCities");
+const log = require("debug")("updateCities:progress");
+const logTotal = require("debug")("updateCities:total");
 const { save } = require("./saveCity");
 const { initMongoose } = require("../utils/mongoose");
 
