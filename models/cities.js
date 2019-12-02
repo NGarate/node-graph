@@ -1,3 +1,7 @@
+const { composeWithMongoose } = require("graphql-compose-mongoose/node8");
+const { schemaComposer } = require("graphql-compose");
+const { model, Schema } = require("mongoose");
+
 const cityArraySchema = [
     {
         geonameid: { type: Number, index: { unique: true } },
@@ -14,7 +18,6 @@ const cityArraySchema = [
                 required: true
             }
         },
-        featureCode: String,
         countryCode: String,
         admin1Code: String,
         admin2Code: String,
@@ -28,22 +31,27 @@ const cityArraySchema = [
     { collection: "Cities" }
 ];
 
-exports.buildCityModel = mongoose => {
-    return getCityModel(mongoose);
-};
+const citySchema = new Schema(...cityArraySchema);
+citySchema.index({ countryCode: 1 });
+citySchema.index({ geonameid: 1 }, { unique: true });
+citySchema.index({ name: 1 });
 
-function getCityModel({ Schema, model }) {
-    const citySchema = getCitySchema(Schema);
-    setUniqueIndexes(citySchema);
-    return model("Cities", citySchema);
-}
+const Cities = model("Cities", citySchema);
 
-function getCitySchema(Schema) {
-    return new Schema(...cityArraySchema);
-}
+const customizationOptions = {}; // left it empty for simplicity, described below
+const CitiesTC = composeWithMongoose(Cities, customizationOptions);
 
-function setUniqueIndexes(schema) {
-    schema.index({ countryCode: 1 });
-    schema.index({ geonameid: 1 }, { unique: true });
-    schema.index({ name: 1 });
-}
+schemaComposer.Query.addFields({
+    cityById: CitiesTC.getResolver("findById"),
+    cityByIds: CitiesTC.getResolver("findByIds"),
+    cityOne: CitiesTC.getResolver("findOne"),
+    cityMany: CitiesTC.getResolver("findMany"),
+    cityCount: CitiesTC.getResolver("count"),
+    cityConnection: CitiesTC.getResolver("connection"),
+    cityPagination: CitiesTC.getResolver("pagination")
+});
+
+const citiesSchema = schemaComposer.buildSchema();
+
+exports.citiesSchema = citiesSchema;
+exports.Cities = Cities;

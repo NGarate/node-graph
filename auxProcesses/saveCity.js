@@ -1,6 +1,6 @@
 const csv = require("csvtojson");
 const unzipper = require("unzipper");
-const { City } = require("../utils/mongoose");
+const { Cities } = require("../models/cities");
 
 exports.save = async function save(config, log) {
     try {
@@ -59,7 +59,7 @@ function isNotCity(json) {
 
 function saveCity({ json, markDeleted, log }) {
     try {
-        return City.findOneAndUpdate(
+        return Cities.findOneAndUpdate(
             { geonameid: json.field1 },
             getCity(json, markDeleted),
             {
@@ -87,8 +87,7 @@ function getCity(json, markDeleted) {
                 ...(json.field16 ? [json.field16] : [])
             ]
         },
-        featureCode: json.field9,
-        countryCode: json.field10,
+        countryCode: json.field9,
         admin1Code: json.field11,
         admin2Code: json.field12,
         admin3Code: json.field13,
@@ -102,7 +101,7 @@ function getCity(json, markDeleted) {
 
 async function markAllDeleted(log) {
     try {
-        const res = await City.updateMany({}, { deleted: true });
+        const res = await Cities.updateMany({}, { deleted: true });
         log("markAllDeleted result: ", res);
     } catch (error) {
         log("markAllDeleted error: ", error);

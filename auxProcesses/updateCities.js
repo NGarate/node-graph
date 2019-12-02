@@ -1,14 +1,19 @@
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
-const log = require("debug")("updateCities");
+const log = require("debug")("progress");
+const logTotal = require("debug")("TotalUpdateCities");
 const { save } = require("./saveCity");
+const { initMongoose } = require("../utils/mongoose");
 
-saveFile();
+updateCitiesDB();
 
-async function saveFile() {
+async function updateCitiesDB() {
     const config = getConfig();
-    log(config);
+
+    initMongoose();
+    logTotal("Update Cities DB Started");
+
     try {
         log("Start downloading");
         await downloadZip(config.filePath);
@@ -16,13 +21,13 @@ async function saveFile() {
 
         log("Start updating");
         await save(config, log);
-        log("Updated");
-
-        process.exit();
     } catch (error) {
-        log(error);
+        logTotal(error);
         process.exit(1);
     }
+
+    logTotal("Updated");
+    process.exit();
 }
 
 function getConfig() {

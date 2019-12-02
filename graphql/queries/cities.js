@@ -1,21 +1,40 @@
 const {
     graphql,
-    GraphQLSchema,
+    GraphQLBoolean,
+    GraphQLScalarType,
+    GraphQLFloat,
+    GraphQLInt,
+    GraphQLList,
     GraphQLObjectType,
     GraphQLString,
-    GraphQLList
+    GraphQLSchema
 } = require("graphql");
+const { DateTimeType } = require("../Types/DateTimeType/");
 
 const cityType = new GraphQLObjectType({
-    name: "Human",
-    fields: () => ({
-        id: { type: GraphQLString },
-        description: { type: GraphQLString },
-        name: { type: GraphQLString }
-    })
+    fields: {
+        geonameid: { type: Number, index: { unique: true } },
+        name: GraphQLString,
+        asciiname: GraphQLString,
+        location: {
+            type: {
+                type: GraphQLString
+            },
+            coordinates: {
+                type: [GraphQLFloat]
+            }
+        },
+        countryCode: GraphQLString,
+        admin1Code: GraphQLString,
+        admin2Code: GraphQLString,
+        admin3Code: GraphQLString,
+        admin4Code: GraphQLString,
+        population: GraphQLInt,
+        timezone: GraphQLString,
+        modification: DateTimeType,
+        deleted: GraphQLBoolean
+    }
 });
-
-const cities = [{ id: "unid", description: "unaciudadbonita", name: "Madrid" }];
 
 exports.schema = new GraphQLSchema({
     query: new GraphQLObjectType({
