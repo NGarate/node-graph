@@ -19,7 +19,6 @@
   "author": "ngarate",
   "license": "ISC",
   "dependencies": {
-    "apollo-server-express": "^2.9.12",
     "axios": "^0.19.0",
     "csvtojson": "^2.0.10",
     "debug": "^4.1.1",
@@ -30,8 +29,7 @@
     "graphql-compose-mongoose": "^7.3.0",
     "mongoose": "^5.7.13",
     "request": "^2.88.0",
-    "unzipper": "^0.10.5",
-    "validator": "^12.1.0"
+    "unzipper": "^0.10.5"
   },
   "devDependencies": {
     "eslint": "^6.7.2",
