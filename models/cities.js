@@ -31,12 +31,13 @@ const cityArraySchema = [
     { collection: "Cities" }
 ];
 
-const citySchema = new Schema(...cityArraySchema);
-citySchema.index({ countryCode: 1 });
-citySchema.index({ geonameid: 1 }, { unique: true });
-citySchema.index({ name: 1 });
+const CitySchema = new Schema(...cityArraySchema);
+CitySchema.index({ countryCode: 1 });
+CitySchema.index({ geonameid: 1 }, { unique: true });
+CitySchema.index({ location: "2dsphere" });
+CitySchema.index({ name: 1 });
 
-const Cities = model("Cities", citySchema);
+const Cities = model("Cities", CitySchema);
 
 const customizationOptions = {}; // left it empty for simplicity, described below
 const CitiesTC = composeWithMongoose(Cities, customizationOptions);
