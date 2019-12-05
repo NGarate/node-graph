@@ -12,6 +12,6 @@ app.use(
 );
 app.use("/", graphqlHTTP({ schema: citiesSchema }));
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port, () => console.log(`node-graph listening on port ${port}!`));
 
 initMongoose();
